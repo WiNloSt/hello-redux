@@ -7,7 +7,10 @@ import Counter from './containers/Counter'
 import rootReducer from './reducers'
 import './style.css'
 
-const store = createStore(rootReducer)
+const store = createStore(
+  rootReducer,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+)
 
 ReactDOM.render(
   <Provider store={store}>
@@ -15,3 +18,11 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('react-root')
 )
+
+if (module.hot) {
+  module.hot.accept('./reducers', () => {
+    const nextRootReducer = require('./reducers').default
+
+    store.replaceReducer(nextRootReducer)
+  })
+}
